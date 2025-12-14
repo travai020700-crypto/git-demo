@@ -8,6 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkut@v3
+      - uses: actions/checkout@v3
       - name: Test step
         run: echo "CI is running successfully"
