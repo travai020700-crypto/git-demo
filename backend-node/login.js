@@ -1,29 +1,31 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware đọc JSON từ frontend
+// Parse JSON request body
 app.use(express.json());
 
-// Route GET / → test server
+// Serve frontend HTML
 app.get("/", (req, res) => {
-  res.send("Backend Node.js is running 🚀");
+  res.sendFile(path.join(__dirname, "../html-frontend/index.html"));
 });
 
-// Route GET /login → test trực tiếp trên trình duyệt
-app.get("/login", (req, res) => {
-  res.json({ success: true, message: "Login API working" });
-});
-
-// Route POST /login → nhận dữ liệu từ frontend
+// Login API
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  // Kiểm tra giả lập
+  // Demo login check
   if (username === "admin" && password === "123") {
-    res.json({ success: true, message: "Login successful" });
+    res.json({
+      success: true,
+      message: "Login successful",
+    });
   } else {
-    res.json({ success: false, message: "Login failed" });
+    res.status(401).json({
+      success: false,
+      message: "Invalid credentials",
+    });
   }
 });
 
