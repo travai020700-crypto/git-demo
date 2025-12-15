@@ -5,36 +5,47 @@
   <title>Login Page</title>
 </head>
 <body>
-  <h1>Login Form</h1>
+  <h1>Login Demo</h1>
+  <h1><u>Trương Nguyễn Tường Vy - Cuối Kỳ </u></h1>
+
   <form id="loginForm">
-    <input type="text" id="username" placeholder="Username" required>
-    <input type="password" id="password" placeholder="Password" required>
+    <label>Username: <input type="text" id="username" required></label><br><br>
+    <label>Password: <input type="password" id="password" required></label><br><br>
     <button type="submit">Login</button>
   </form>
-  <pre id="result"></pre>
+
+  <p id="result"></p>
 
   <script>
-    const form = document.getElementById('loginForm');
-    const result = document.getElementById('result');
+    const form = document.getElementById("loginForm");
+    const result = document.getElementById("result");
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
       try {
-            const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-            });
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, password })
+        });
 
-
-        const data = await response.json();
-        result.textContent = JSON.stringify(data, null, 2);
+        const data = await res.json();
+        if (res.ok) {
+          result.textContent = `Success: ${data.message}`;
+          result.style.color = "green";
+        } else {
+          result.textContent = `Error: ${data.message}`;
+          result.style.color = "red";
+        }
       } catch (err) {
-        result.textContent = 'Error: ' + err.message;
+        result.textContent = `Error: ${err.message}`;
+        result.style.color = "red";
       }
     });
   </script>
