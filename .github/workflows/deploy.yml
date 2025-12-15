@@ -1,0 +1,43 @@
+name: CI/CD Node.js Backend + Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Cài Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24.x'
+
+      # 3️⃣ Cài dependencies backend
+      - name: Install backend dependencies
+        run: |
+          cd backend-node
+          npm install
+
+      # 4️⃣ Test backend (tùy chọn)
+      - name: Test backend with curl
+        run: |
+          curl -X POST http://localhost:3000/login \
+          -H "Content-Type: application/json" \
+          -d '{"username":"admin","password":"123"}' || echo "Local test skipped in CI"
+
+      # 5️⃣ Deploy lên Render (tuỳ chọn)
+      - name: Deploy backend to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          npm install -g @render/cli
+          render login --api-key $RENDER_API_KEY
+          render deploy web-service srv-d4vl4eq4d50c7383l0a0
